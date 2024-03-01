@@ -1,36 +1,27 @@
 package io.temporal.learning;
 
 import java.io.*;
+import java.util.Random;
 import java.time.Duration;
 import io.temporal.activity.*;
 
 @ActivityInterface
 public interface TutorialActivities {
-    // Vended activities.
-    public void doSomethingFirst(String input);
-    public void doSomethingSecond(String input);
+    public String echo(String input);
     
     public ActivityOptions quickActivityOptions = ActivityOptions.newBuilder()
-    .setStartToCloseTimeout(Duration.ofSeconds(12)) // Max Activity execution time only
-    .setScheduleToCloseTimeout(Duration.ofSeconds(120)) // Entire duration from scheduling to completion, including queue time.
+    // Max Activity execution
+    .setStartToCloseTimeout(Duration.ofSeconds(12))
+    // Entire duration: scheduling to completion, including queue time.
+    .setScheduleToCloseTimeout(Duration.ofSeconds(20))
     .build();
     
     // Implement the vended activities, normally externally
     public static class TutorialActivitiesImpl implements TutorialActivities {
         @Override
-        public void doSomethingFirst(String input) {
-            System.out.println("Starting Activity 1");
-            try { Thread.sleep(8000); } // sleep for a few seconds
-            catch (InterruptedException e) { e.printStackTrace(); }
-            System.out.println("Finished first activity. Processed " + input);
-        }
-        
-        @Override
-        public void doSomethingSecond(String input) {
-            System.out.println("Starting Activity 2");
-            try { Thread.sleep(8000); } // sleep for a few seconds
-            catch (InterruptedException e) { e.printStackTrace(); }
-            System.out.println("Finished second activity. Processed " + input);
+        public String echo(String input) {
+            StringBuilder reversed = new StringBuilder(input).reverse();
+            return reversed.toString();
         }
     }
 }
