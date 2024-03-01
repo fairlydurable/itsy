@@ -20,7 +20,8 @@ public interface TutorialActivities {
     public static class TutorialActivitiesImpl implements TutorialActivities {
         @Override
         public String echo(String input) {
-            return input;
+            StringBuilder reversed = new StringBuilder(input).reverse();
+            return reversed.toString();
         }
     }
 }
