@@ -16,7 +16,7 @@ public class MiniWorker {
         
         // A Worker listens to one task queue, processing workflows and activities.
         Worker worker = factory.newWorker("TutorialTaskQueue");
-
+        
         // Register a Workflow implementation with this worker.
         // The implementation must be known at runtime to dispatch workflow tasks.
         worker.registerWorkflowImplementationTypes(TutorialWorkflow.TutorialWorkflowImpl.class);
