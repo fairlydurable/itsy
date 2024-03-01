@@ -1,11 +1,13 @@
 group 'io.temporal'; version '0.0.1' // Project Settings
 repositories { mavenCentral() }      // Dependency resolution
-apply plugin: 'java'                 // Enable Java compilation and JAR creation
-sourceSets.main.java.srcDirs '.'     // Sources
+
+apply plugin: 'java' // Enable Java compilation and JAR creation
+sourceSets.main.java.srcDirs += ['.', './src'] // Sources
 
 // Dependencies
 dependencies {
     implementation 'io.temporal:temporal-sdk:1.22.2'
+    implementation 'org.json:json:20210307'
     implementation 'org.slf4j:slf4j-nop:2.0.6' // Tutorial logging; Not for production use
 }
 
