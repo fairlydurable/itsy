@@ -6,7 +6,7 @@ import io.temporal.activity.*;
 import io.temporal.weather.*;
 
 @ActivityInterface
-public interface TutorialActivities {
+public interface ForecastActivities {
     public String[] fetchGeolocation(String input);
     public String   fetchForecast(String[] input);
 
@@ -15,7 +15,7 @@ public interface TutorialActivities {
     .setScheduleToCloseTimeout(Duration.ofSeconds(60)) // Entire duration from scheduling to completion, including queue time.
     .build();
 
-    public static class TutorialActivitiesImpl implements TutorialActivities {
+    public static class ForecastActivitiesImpl implements ForecastActivities {
         @Override
         public String[] fetchGeolocation(String input) {
             try { 

@@ -2,23 +2,45 @@
 
 A teeny tiny working solution to make Temporal easier to learn. 
 
-It's Gradle and it breaks your mind and your heart if you love Java but it reduces the complexity so immensely that you can just focus on learning Temporal concepts.
+It's Gradle. This setup may break your mind and your heart if you love Java.  But...it reduces the complexity immensely so you can focus on learning Temporal concepts. These projects assume you know and love Java and want to learn (and love) Temporal.
 
-## Limits
+Each project is in a different branch. If I've added notes to branches, use git log to read them.
 
-Only for use with the local server. (Someday, Cloud too!).
+See `tserve`, `tflow`, and `clflow` from [Useful Commands](https://github.com/fairlydurable/useful-cmds) to make your life easier.
 
-See `tserve` and `tflow` from [Useful Commands](https://github.com/fairlydurable/useful-cmds) to make your life easier to go along with this.
+## Folder Contents
 
-## Things you need to know
+Each project has the same top level folder, with varying contents in each of the main files. The contents include:
+
+* **build.gradle** A minimal Gradle build file with no tests.
+* **ForecastWorkerApp** launches a new Worker.
+* **ForecastWorker** runs a Worker that polls either the local server or Temporal Cloud.
+* **ForecastWorkflow** A basic Workflow, which changes for each sample.
+* **ForecastActivities** Activities, which change for each sample.
+* **/src** (optional) When this appears, additional source needed for more complex samples.
+
+## Building and Running
 
 **Pull your dependencies**: `gradle dependencies`. Only need to do this once.
 
 **Build the Worker app**: `gradle build`
 
-**Run the Worker**: `gradle runApp` Note: It will block and stay there, which is what you want, especially when you start learning. Any text output will show right there. Later there will be other ways through Activities to communicate and produce results.
+**Run the Worker**: `gradle run` Note: It will block and stay there, which is what you want, especially when you start learning. Any text output will show right there. Later there will be other ways through Activities to communicate and produce results.
 
-**Clean up**: `gradle clean`. Most people won't need this, but it's there if you like a tidy folder.
+**Clean up**: `gradle clean`. Depending on your [".gitignore"](https://gitignore.io) setup, your Gradle artifacts may not be tracked. For tidy enthusiasts, choose from the following:
+
+* `rm -rf .gradle`.
+* `git stash; git stash drop`
+* If you feel _really_ courageous, `git reset --hard HEAD`. 
+
+## Naming
+
+* **Task Queue** ForecastWorkflow-queue (`--queue`)
+* **Workflow Definition** ForecastWorkflow (`--type`)
+* **Workflow Execution ID** ForecastWorkflow-\<numberstring> derived from `date +%s`, the number of seconds since the Unix epoch. (`--workflow-id`, if used. If not, one is generated). Adjust this as you like.
+* **Namespace** Set this up for yourself. (`--namespace`)
+* **Address** Set this up for yourself, default port is 7233. (`--address`)
+* **Certificate paths**: ~/.ssh/tcloud.pem and .key. Otherwise, adjust as needed. (`--tls-cert-path` and `--tls-key-path`)
 
 ## License
 
