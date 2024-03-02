@@ -12,6 +12,6 @@ dependencies {
 // Run the Worker
 task runApp(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'io.temporal.learning.MiniWorker'
+    mainClass = 'io.temporal.learning.TutorialWorkerApp'
     standardOutput = System.out
 }
