@@ -3,8 +3,8 @@ import io.temporal.worker.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
-public class MiniWorker {
-    public static void main(String[] args) {
+public class TutorialWorker {
+    public static void runTutorialWorker(String[] args) {
         // Create a service stub
         WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
         
@@ -15,7 +15,7 @@ public class MiniWorker {
         WorkerFactory factory = WorkerFactory.newInstance(client);
         
         // A Worker listens to one task queue, processing workflows and activities.
-        Worker worker = factory.newWorker("TutorialTaskQueue");
+        Worker worker = factory.newWorker("TutorialWorkflow-queue");
 
         // Register a Workflow implementation with this worker.
         // The implementation must be known at runtime to dispatch workflow tasks.
