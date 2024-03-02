@@ -7,12 +7,12 @@ import io.temporal.workflow.*;
 import io.temporal.weather.*;
 
 @WorkflowInterface
-public interface TutorialWorkflow {
+public interface ForecastWorkflow {
     @WorkflowMethod String startWorkflow(String input);
     
-    public static class TutorialWorkflowImpl implements TutorialWorkflow {
+    public static class ForecastWorkflowImpl implements ForecastWorkflow {
         
-        private TutorialActivities activityStub = Workflow.newActivityStub(TutorialActivities.class, TutorialActivities.quickActivityOptions);
+        private ForecastActivities activityStub = Workflow.newActivityStub(ForecastActivities.class, ForecastActivities.quickActivityOptions);
         
         @Override
         public String startWorkflow(String input) {
