@@ -1,67 +1,133 @@
-# Itsy Bitsy Teeny Weeny Super Tiny Minimal Worker and Workflow Project
+# "Coffee Server" Learning Endpoint: Unreliable-by-Design 
 
-A teeny tiny working solution to make Temporal easier to learn. 
+If everything in the world worked predictably, there\'d be no need for Temporal. Instead, handling unreliable services is central to real-world software development. Network issues, service outages, and other circumstances regularly interrupt or delay business processes.
 
-It's Gradle. This setup may break your mind and your heart if you love Java.  But...it reduces the complexity immensely so you can focus on learning Temporal concepts. These projects assume you know and love Java and want to learn (and love) Temporal.
-
-Each project is in a different branch. If I've added notes to branches, use git log to read them.
-
-See `tserve`, `tflow`, and `clflow` from [Useful Commands](https://github.com/fairlydurable/useful-cmds) to make your life easier.
-
-## Folder Contents
-
-Each project has the same top level folder, with varying contents in each of the main files. The contents include:
-
-* **build.gradle** A minimal Gradle build file with no tests.
-* **TutorialWorkerApp** launches a new Worker.
-* **TutorialWorker** runs a Worker that polls either the local server or Temporal Cloud.
-* **TutorialWorkflow** A basic Workflow, which changes for each sample.
-* **TutorialActivities** Activities, which change for each sample.
-* **/src** (optional) When this appears, additional source needed for more complex samples.
+This microserve provides a simulated coffee server. It offers controlled end-point reliability with a failure rate that you choose. Use it to explore and experiment as you explore building resilient systems.
 
 ## Building and Running
 
-**Pull your dependencies**: `gradle dependencies`. Only need to do this once.
+This project uses "make" commands to build and execute the Coffee server, and to clean up build artifacts from the working directory.
 
-**Build the Worker app**: `gradle build`
+### Project Contents
 
-**Run the Worker**: `gradle run` Note: It will block and stay there, which is what you want, especially when you start learning. Any text output will show right there. Later there will be other ways through Activities to communicate and produce results.
+The project consists of a single Java source, a Makefile, and this README.md.
 
-**Clean up**: `gradle clean`. Depending on your [".gitignore"](https://gitignore.io) setup, your Gradle artifacts may not be tracked. For tidy enthusiasts, choose from the following:
+```
+$ ls
+CoffeeServer.java	Makefile		README.md
+```
 
-* `rm -rf .gradle`.
-* `git stash; git stash drop`
-* If you feel _really_ courageous, `git reset --hard HEAD`. 
+### Build
 
-## Naming
+To build the server, issue:
 
-* **Task Queue** TutorialWorkflow-queue (`--queue`)
-* **Workflow Definition** TutorialWorkflow (`--type`)
-* **Workflow Execution ID** TutorialWorkflow-\<numberstring> derived from `date +%s`, the number of seconds since the Unix epoch. (`--workflow-id`, if used. If not, one is generated). Adjust this as you like.
-* **Namespace** Set this up for yourself. (`--namespace`)
-* **Address** Set this up for yourself, default port is 7233. (`--address`)
-* **Certificate paths**: ~/.ssh/tcloud.pem and .key. Otherwise, adjust as needed. (`--tls-cert-path` and `--tls-key-path`)
+```bash
+$ make
+```
+Alternately, `make build` starts compilation.
 
-## License
+### Run the Server
 
-MIT License
+Start up the server by executing:
 
-Copyright (c) 2020 temporal.io
+```bash
+$ make run
+```
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+To keep your server running, use `nohup` execution along with your `make run` command:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+```bash
+$ nohup make run &
+```
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Using `nohup` makes the server immune to hangups. It sets the execution to ignore the SIGHUP signal (terminate process and/or terminal line hangup). Hangup immunity provides continuous execution even after ending your shell or SSH session or closing your terminal window. The server continues to run when you log out.
+
+### Nohup and Output
+
+During a nohup run, standard output and standard error are normally redirected to the working directory's "nohup.out" file. This server logs its address, port, and all connections to standard out. View the most recent connections by issuing:
+
+```
+$ tail nohup.out
+```
+
+### Resolving SSH hang-ups
+
+Occasionally, you may encounter issues with some SSH clients when using nohup. If the session hangs, try this approach:
+
+```
+$ nohup make run & > nohup.out 2> nohup.err < /dev/null &
+```
+
+The source of the issue is when an SSH session refuses to log off because it's protecting the data going to or from the background job. This resolution approach redirects all three streams (stdin, stdout, stderr).
+
+**Note:** The server operates on port 8418, selected with a nod towards the Teapot HTTP status. 
+
+### Cleaning Up
+
+To remove any generated files or artifacts, use the following command:
+
+```bash
+$ make clean
+```
+
+This deletes the `build` folder in your working directory.
+
+## Tutorial Endpoint: 
+
+Gain practical experience with this learning-focused endpoint. Use this endpoint to:
+
+-   Test and validate against controlled levels of service reliability.
+-   Implement retry and error handling strategies.
+-   Mitigate service failures impact.
+-   Design with reliable fault-tolerant durable execution.
+-   Explore concepts of resilience like circuit breakers, timeouts, and exponential backoff.
+
+## Use Cases: 
+
+-   Incorporate this endpoint into your Temporal learning process.
+-   Use an endpoint like this during your prototyping phase.
+-   Experiment with controlled resilience patterns when validating designs.
+
+## Examples: 
+
+Request a cup of coffee with default reliability (50% success).
+
+```
+GET /coffee
+```
+
+Request a cup of coffee with increased reliability (80% success).
+
+```
+GET /coffee?reliability=0.8
+```
+
+Request a cup of coffee with low reliability (20% success).
+
+```
+GET /coffee?reliability=0.2
+```
+
+```
+    static String asciiTeaArt = ""
+    + "           .------.____\n"
+    + "         .-'       \\ ___)\n"
+    + "      .-'         \\\\\\\n"
+    + "   .-'        ___  \\\\)\n"
+    + ".-'          /  (\\  |)\n"
+    + "         __  \\  ( | |\n"
+    + "        /  \\  \\__'| |\n"
+    + "       /    \\____).-'\n"
+    + "     .'       /   |\n"
+    + "    /     .  /    |\n"
+    + "  .'     / \\/     |\n"
+    + " /      /   \\     |\n"
+    + "       /    /    _|_\n"
+    + "       \\   /    /\\ /\\\n"
+    + "        \\ /    /__v__\\\n"
+    + "         '    |       |\n"
+    + "              |     .#|\n"
+    + "              |#.  .##|\n"
+    + "              |#######|\n"
+    + "              |#######|\n" 
+```
