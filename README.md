@@ -13,10 +13,10 @@ See `tserve`, `tflow`, and `clflow` from [Useful Commands](https://github.com/fa
 Each project has the same top level folder, with varying contents in each of the main files. The contents include:
 
 * **build.gradle** A minimal Gradle build file with no tests.
-* **TutorialWorkerApp** launches a new Worker.
-* **TutorialWorker** runs a Worker that polls either the local server or Temporal Cloud.
-* **TutorialWorkflow** A basic Workflow, which changes for each sample.
-* **TutorialActivities** Activities, which change for each sample.
+* **CoinFlipperWorkerApp** launches a new Worker.
+* **CoinFlipperWorker** runs a Worker that polls either the local server or Temporal Cloud.
+* **CoinFlipperWorkflow** A basic Workflow, which changes for each sample.
+* **CoinFlipperActivities** Activities, which change for each sample.
 * **/src** (optional) When this appears, additional source needed for more complex samples.
 
 ## Building and Running
@@ -35,9 +35,9 @@ Each project has the same top level folder, with varying contents in each of the
 
 ## Naming
 
-* **Task Queue** TutorialWorkflow-queue (`--queue`)
-* **Workflow Definition** TutorialWorkflow (`--type`)
-* **Workflow Execution ID** TutorialWorkflow-\<numberstring> derived from `date +%s`, the number of seconds since the Unix epoch. (`--workflow-id`, if used. If not, one is generated). Adjust this as you like.
+* **Task Queue** CoinFlipperWorkflow-queue (`--queue`)
+* **Workflow Definition** CoinFlipperWorkflow (`--type`)
+* **Workflow Execution ID** CoinFlipperWorkflow-\<numberstring> derived from `date +%s`, the number of seconds since the Unix epoch. (`--workflow-id`, if used. If not, one is generated). Adjust this as you like.
 * **Namespace** Set this up for yourself. (`--namespace`)
 * **Address** Set this up for yourself, default port is 7233. (`--address`)
 * **Certificate paths**: ~/.ssh/tcloud.pem and .key. Otherwise, adjust as needed. (`--tls-cert-path` and `--tls-key-path`)

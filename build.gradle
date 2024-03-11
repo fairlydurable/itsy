@@ -10,8 +10,15 @@ dependencies {
 }
 
 // Run the Worker
-task runApp(type: JavaExec) {
+task worker(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'io.temporal.learning.TutorialWorkerApp'
+    mainClass = 'io.temporal.learning.CoinFlipperWorkerApp'
     standardOutput = System.out
+}
+
+// Run the caller
+task caller(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.temporal.learning.CoinFlipperCallerApp'
+    args = ['10'] // Replace '10' with the desired Flip Count
 }

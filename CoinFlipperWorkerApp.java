@@ -2,7 +2,7 @@ package io.temporal.learning;
 import java.io.BufferedOutputStream;
 import java.io.PrintStream;
 
-public class TutorialWorkerApp {
+public class CoinFlipperWorkerApp {
     static {
         // Enable print statements
         System.setOut(new PrintStream(new BufferedOutputStream(System.out), true));
@@ -10,6 +10,6 @@ public class TutorialWorkerApp {
     }
 
     public static void main(String[] args) {
-        TutorialWorker.runTutorialWorker(args);
+        CoinFlipperWorker.runCoinFlipperWorker(args);
     }
 }
