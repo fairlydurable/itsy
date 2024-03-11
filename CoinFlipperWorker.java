@@ -1,33 +1,64 @@
 package io.temporal.learning;
 import io.temporal.worker.*;
-import io.temporal.client.WorkflowClient;
-import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.client.*;
+import io.temporal.serviceclient.*;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
+import java.io.*;
+import java.lang.System;
+import javax.net.ssl.SSLException;
 
 public class CoinFlipperWorker {
     public static void runCoinFlipperWorker(String[] args) {
-        // Create a service stub
-        WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
+        String userHome = System.getProperty("user.home");
+        String clientCertPath = userHome + "/.ssh/tcloud.pem";
+        String clientKeyPath = userHome + "/.ssh/tcloud.key";
         
-        // A Workflow Client can start, Signal, and Query a Workflow Execution
-        WorkflowClient client = WorkflowClient.newInstance(service);
-        
-        // A Workflow Factory creates workers.
-        WorkerFactory factory = WorkerFactory.newInstance(client);
-        
-        // A Worker listens to one task queue, processing workflows and activities.
-        Worker worker = factory.newWorker("CoinFlipperWorkflow-queue");
-
-        // Register a Workflow implementation with this worker.
-        // The implementation must be known at runtime to dispatch workflow tasks.
-        worker.registerWorkflowImplementationTypes(
-                CoinFlipperWorkflow.CoinFlipperWorkflowImpl.class);
-        
-        // Register Activity Types from the Activity vendor with the worker.
-        // Each activity is stateless and thread-safe, so use a single shared instance.
-        worker.registerActivitiesImplementations(
-                new CoinFlipperActivities.CoinFlipperActivitiesImpl());
-        
-        // Start all registered workers. The workers will start polling.
-        factory.start();
+        try {
+            // Generate SSL context
+            InputStream clientCertInputStream = new FileInputStream(clientCertPath);
+            InputStream clientKeyInputStream = new FileInputStream(clientKeyPath);
+            SslContext sslContext = SimpleSslContextBuilder.forPKCS8(clientCertInputStream, clientKeyInputStream).build();
+            
+            // Set service stub options and generate the stub
+            String namespace = "docs-assembly.a2dd6";
+            String qualifiedNamespace = namespace + ".tmprl.cloud:7233";
+            WorkflowServiceStubsOptions stubsOptions = WorkflowServiceStubsOptions
+            .newBuilder()
+            .setSslContext(sslContext)
+            .setTarget(qualifiedNamespace)
+            .build();
+            WorkflowServiceStubs serviceStub = WorkflowServiceStubs.newServiceStubs(stubsOptions);
+            
+            // Set the client options
+            WorkflowClientOptions clientOptions = WorkflowClientOptions
+            .newBuilder()
+            .setNamespace(namespace)
+            .build();
+            
+            // Initialize the Temporal Client
+            WorkflowClient client = WorkflowClient.newInstance(serviceStub, clientOptions);
+            
+            // A Workflow Factory creates workers.
+            WorkerFactory factory = WorkerFactory.newInstance(client);
+            
+            // A Worker listens to one task queue, processing workflows and activities.
+            Worker worker = factory.newWorker("CoinFlipperWorkflow-queue");
+            
+            // Register a Workflow implementation with this worker.
+            // The implementation must be known at runtime to dispatch workflow tasks.
+            worker.registerWorkflowImplementationTypes(CoinFlipperWorkflow.CoinFlipperWorkflowImpl.class);
+            
+            // Register Activity Types from the Activity vendor with the worker.
+            // Each activity is stateless and thread-safe, so use a single shared instance.
+            worker.registerActivitiesImplementations(new CoinFlipperActivities.CoinFlipperActivitiesImpl());
+            
+            // Start all registered workers. The workers will start polling.
+            factory.start();
+            
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (SSLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
