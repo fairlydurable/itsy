@@ -1,25 +1,25 @@
-SRC_DIR := src
-OUT_DIR := build/classes
-PACKAGE := unreliable
-MAIN_CLASS := CoffeeServer
+JAVAC = javac
+JAVAC_FLAGS = -d $(OUT_DIR)
+OUT_DIR = build/classes
+PACKAGE = token
+PACKAGE_DIR = .
+SERVER_SOURCE = $(PACKAGE_DIR)/TokenServer.java
+STORE_SOURCE = $(PACKAGE_DIR)/TokenStore.java
 
-JAVAC := javac
-JAVA := java
-JAVAC_FLAGS := -d $(OUT_DIR) -cp $(OUT_DIR)
-JAVA_FLAGS := -cp $(OUT_DIR)
+MAIN_CLASS = TokenServer
 
-.PHONY: all build run clean
+.PHONY: all run clean
 
-all: build
+all: $(OUT_DIR) $(OUT_DIR)/$(MAIN_CLASS).class
 
-build:
-	@mkdir -p $(OUT_DIR)
-	$(JAVAC) $(JAVAC_FLAGS) $(MAIN_CLASS).java
+$(OUT_DIR):
+	mkdir -p $(OUT_DIR)
+
+$(OUT_DIR)/$(MAIN_CLASS).class: $(SERVER_SOURCE) $(STORE_SOURCE)
+	$(JAVAC) $(JAVAC_FLAGS) $(SERVER_SOURCE) $(STORE_SOURCE)
 
 run:
-	@$(JAVA) $(JAVA_FLAGS) $(PACKAGE).$(MAIN_CLASS) $(filter-out $@,$(MAKECMDGOALS))
-	@false
+	java -classpath $(OUT_DIR) $(PACKAGE)/$(MAIN_CLASS)
 
 clean:
-	@rm -rf build
-
+	rm -rf $(OUT_DIR)
