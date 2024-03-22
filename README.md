@@ -1,46 +1,132 @@
-# Itsy Bitsy Teeny Weeny Super Tiny Minimal Worker and Workflow Project
+# Webpage Update Worker
 
-A teeny tiny working solution to make Temporal easier to learn. 
+## Overview
 
-It's Gradle. This setup may break your mind and your heart if you love Java.  But...it reduces the complexity immensely so you can focus on learning Temporal concepts. These projects assume you know and love Java and want to learn (and love) Temporal.
+This project is designed to update a Webpage every three minutes, providing fresh content. It uses the Temporal server to schedule Workflows that execute updates, ensuring that the content remains dynamic and engaging.
 
-Each project is in a different branch. If I've added notes to branches, use git log to read them.
+## Prerequisites
 
-See `tserve`, `tflow`, and `clflow` from [Useful Commands](https://github.com/fairlydurable/useful-cmds) to make your life easier.
+Before proceeding with the setup and execution of the project, ensure you have the following installed:
 
-## Folder Contents
+- Java JDK (version 8 or newer)
+- Gradle (for building the Java project)
+- Temporal Server (for scheduling and managing tasks)
 
-Each project has the same top level folder, with varying contents in each of the main files. The contents include:
+## Getting Started
 
-* **build.gradle** A minimal Gradle build file with no tests.
-* **TutorialWorkerApp** launches a new Worker.
-* **TutorialWorker** runs a Worker that polls either the local server or Temporal Cloud.
-* **TutorialWorkflow** A basic Workflow, which changes for each sample.
-* **TutorialActivities** Activities, which change for each sample.
-* **/src** (optional) When this appears, additional source needed for more complex samples.
+To get the project up and running, follow these steps:
 
-## Building and Running
+### Build the Project
 
-**Pull your dependencies**: `gradle dependencies`. Only need to do this once.
+Compile the Java source to prepare the worker and scheduler for execution.
 
-**Build the Worker app**: `gradle build`
+```bash
+make
 
-**Run the Worker**: `gradle run` Note: It will block and stay there, which is what you want, especially when you start learning. Any text output will show right there. Later there will be other ways through Activities to communicate and produce results.
+--or--
 
-**Clean up**: `gradle clean`. Depending on your [".gitignore"](https://gitignore.io) setup, your Gradle artifacts may not be tracked. For tidy enthusiasts, choose from the following:
+make build
+```
 
-* `rm -rf .gradle`.
-* `git stash; git stash drop`
-* If you feel _really_ courageous, `git reset --hard HEAD`. 
+## Start the Server
 
-## Naming
+Initiate the Temporal Development Server so it can manage the scheduled workflow, and the workflow's activities.
 
-* **Task Queue** TutorialWorkflow-queue (`--queue`)
-* **Workflow Definition** TutorialWorkflow (`--type`)
-* **Workflow Execution ID** TutorialWorkflow-\<numberstring> derived from `date +%s`, the number of seconds since the Unix epoch. (`--workflow-id`, if used. If not, one is generated). Adjust this as you like.
-* **Namespace** Set this up for yourself. (`--namespace`)
-* **Address** Set this up for yourself, default port is 7233. (`--address`)
-* **Certificate paths**: ~/.ssh/tcloud.pem and .key. Otherwise, adjust as needed. (`--tls-cert-path` and `--tls-key-path`)
+```
+make server
+```
+
+## Run the Worker
+
+Start the Worker so it's available to kick off Workflows and Activities as they appear in its polled Task Queues.
+
+```
+make worker
+```
+
+## Establish the Schedule
+
+Schedule the workflow that triggers the webpage update.
+
+```
+make schedule
+```
+
+## Check the Schedule
+
+Verify that the schedule has been correctly established.
+
+```
+make check
+```
+
+View the schedule from the command line. It tells you when the next update will occur.
+
+```
+`which temporal` schedule list
+```
+
+View the schedule on the Web page
+
+```
+make open_web
+```
+
+# Make Commands
+
+This project includes a Makefile that simplifies the process of building, running, and managing the project components. The available commands are as follows:
+
+* `make build`: Compiles the Java source files.
+* `make server`: Starts the Temporal Development Server.
+* `make worker`: Initiates the worker process.
+* `make schedule`: Triggers the scheduling of the webpage update * workflow.
+* `make check`: Checks whether the update schedule is in place.
+* `make open_web`: Opens the Temporal Server Web UI Schedules page for monitoring.
+* `make stop_worker`: Stops the worker process.
+* `make stop_schedule`: Stops and deletes the update schedule.
+* `make stop`: Stops the worker process, and stops and deletes the update schedule.
+* `make clean`: Removes build artifacts to clean up the project directory.
+
+There are a few extra items in the Makefile if you look carefully.
+
+# Stopping the Project
+
+To stop and clean up all components of the project, use the following commands:
+
+**Stop the worker process**
+
+```
+make stop_worker
+```
+
+**Stop and delete the schedule**
+
+```
+make stop_schedule
+```
+
+**Perform both stop\_worker and stop\_schedule**
+
+```
+make stop
+```
+
+**Clean the build artifacts**
+
+```
+make clean
+```
+
+# Project Structure
+
+* **TutorialWorkerApp.java** - Entry point for the Worker app
+* **TutorialWorker.java** - A basic Worker. It polls the 'TutorialWorkflow-queue' Task Queue.
+* **TutorialWorkflow.java** Hosts the Workflow that calls the update activity.
+* **TutorialActivities.java** - Hosts the update activity that sends new content to the [Mantra Webpage](http://146.190.45.234:8888).
+* **MantraScheduler.java** - Standalone scheduling app. 
+    * Sets the 'mantra-update' schedule. The schedule places the TutorialWorkflow onto the TutorialWorkflow-queue every three minutes. 
+    * The Workflow ID is always 'tutorial-mantra-workflow'. 		
+* **Mantra.java** - Defines the Mantra class and its one public method: `getRandomMantra()`, which returns a String.
 
 ## License
 

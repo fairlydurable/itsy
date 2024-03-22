@@ -9,9 +9,15 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.6' // logging suppression
 }
 
-// Run the Worker
-task runApp(type: JavaExec) {
+task worker(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'io.temporal.learning.TutorialWorkerApp'
     standardOutput = System.out
 }
+
+task schedule(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.temporal.learning.MantraScheduler'
+    standardOutput = System.out
+}
+
