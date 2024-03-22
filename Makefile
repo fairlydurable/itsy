@@ -1,7 +1,7 @@
 SRC_DIR := src
 OUT_DIR := build/classes
 PACKAGE := unreliable
-MAIN_CLASS := CoffeeServer
+MAIN_CLASS := MantraServer
 
 JAVAC := javac
 JAVA := java
