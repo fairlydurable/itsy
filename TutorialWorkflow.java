@@ -7,7 +7,7 @@ import io.temporal.workflow.*;
 @WorkflowInterface
 public interface TutorialWorkflow {
     @WorkflowMethod void startWorkflow();
-    
+    @SignalMethod void updateMantra();
     public static class TutorialWorkflowImpl implements TutorialWorkflow {
         private TutorialActivities activityStub = Workflow
             .newActivityStub(TutorialActivities.class,
@@ -17,5 +17,11 @@ public interface TutorialWorkflow {
         public void startWorkflow() {
             activityStub.changeMantra();
         }
+        
+        @Override
+        public void updateMantra() {
+            activityStub.changeMantra();
+        }
+        
     }
 }

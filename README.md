@@ -1,5 +1,7 @@
 # Webpage Update Worker
 
+NOTE: This branch also adds basic signals with `MantraSignaler`. Use `make signal` and you don't have to set a schedule.
+
 ## Overview
 
 This project is designed to update a Webpage every three minutes, providing fresh content. It uses the Temporal server to schedule Workflows that execute updates, ensuring that the content remains dynamic and engaging.

@@ -43,6 +43,10 @@ worker:
 schedule:
 	gradle schedule > /dev/null 2>&1
 	
+# Send a signal to run the Workflow
+signal:
+	gradle signal > /dev/null 2>&1
+	
 # List the commands
 list:
 	@-echo "build * clean * server * worker * schedule * stop * check * checkin * start_server * open_web * stop_worker * stop_schedule * list"

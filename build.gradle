@@ -21,3 +21,9 @@ task schedule(type: JavaExec) {
     standardOutput = System.out
 }
 
+task signal(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.temporal.learning.MantraSignaler'
+    standardOutput = System.out
+}
+
