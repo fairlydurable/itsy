@@ -27,7 +27,8 @@ public interface TutorialActivities {
             String mantra = Mantra.getRandomMantra();
             try {
                 String encodedString = URLEncoder.encode(mantra, "UTF-8");
-                URI uri = new URI("http://146.190.45.234:8888/mantra?content=" + encodedString);
+                // URI uri = new URI("http://146.190.45.234:8888/mantra?content=" + encodedString);
+                URI uri = new URI("http://127.0.0.1:8080/mantra?update=" + encodedString);
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
